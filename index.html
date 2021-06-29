@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Formulario Arbol Genealógico</title>
+
+	<!-- ===== Jquery ===== -->
+	<script src="./node_modules/jquery/dist/jquery.min.js"></script>
+	<!-- ===== Bootstrap CSS ===== -->
+	<link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+	<!-- ===== Bootstrap ISO ===== -->
+	<link rel="stylesheet" href="https://formden.com/static/cdn/bootstrap-iso.css" />
+	<!-- ===== Bootstrap Datepicke ===== -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+	<!-- ===== Bootstrap Icons ===== -->
+	<link rel="stylesheet" href="./node_modules/bootstrap-icons/font/bootstrap-icons.css">
+	<!-- ===== Estilos propios ===== -->
+	<link rel="stylesheet" href="./node_modules/estilos.css">
+
+<!-- Special version of Bootstrap that only affects content wrapped in .bootstrap-iso -->
+</head>
+<body>
+<!-- Inline CSS  -->
+<style>.bootstrap-iso .formden_header h2, .bootstrap-iso .formden_header p, .bootstrap-iso form{font-family: Arial, Helvetica, sans-serif; color: black}.bootstrap-iso form button, .bootstrap-iso form button:hover{color: white !important;} .asteriskField{color: red;}</style>
+
+<div class="bootstrap-iso">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-6 col-sm-6 col-xs-12">
+				<form method="post">
+					<div class="form-group ">
+						<label class="control-label " for="name">
+						Nombre completo:
+						</label>
+						<input class="form-control" id="name" name="name" type="text"/>
+					</div>
+					<div class="form-group ">
+						<label class="control-label " for="date">
+						Fecha de nacimiento:
+						</label>
+						<input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text"/>
+					</div>
+					<div class="form-group ">
+						<label class="control-label " for="tel">
+						Número de teléfono:
+						</label>
+						<input class="form-control" id="tel" name="tel" type="text"/>
+					</div>
+					<div class="form-group ">
+						<label class="control-label requiredField" for="email">
+						Email:
+						<span class="asteriskField">
+						*
+						</span>
+						</label>
+						<input class="form-control" id="email" name="email" type="text"/>
+					</div>
+					<div class="form-group ">
+						<label class="control-label " for="select">
+							Estado Civil:
+						</label>
+						<select class="select form-control" id="select" name="select" onChange="mostrar(this.value);">
+							<option value="soltero">
+							soltera/o
+							</option>
+							<option value="concubinato">
+							concubinato
+							</option>
+							<option value="casado">
+							casada/o
+							</option>
+							<option value="divorciado">
+							divorciada/o
+							</option>
+							<option value="viudo">
+							viuda/o
+							</option>
+						</select>
+					</div>
+
+<!-- ==== Opciones estado civil ==== --><div>
+					<div id="soltero" style="display: none;"></div>
+					<div id="concubinato" style="display: none;"></div>
+
+<!-- =========== casado ============ --><div id="casado" style="display: none;">
+						<div action="index.php" method="post">
+							<label class="control-label " for="date">
+							Fecha de matrimonio:
+							</label>
+							<input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text"/>
+							<br>
+							<label class="control-label " for="lugardematrimonio">
+							Lugar de matrimonio (ciudad, provincia, país):
+							</label>
+							<input class="form-control" id="lugardematrimonio" name="lugardematrimonio" type="text"/>
+							<br>
+							<label class="control-label " for="adjuntar">
+							adjunta acta de matrimonio:
+							</label>
+							<input type="file" name="adjunto" accept=".pdf,.jpg,.png" multiple /></p>
+						</div>
+						<br>
+						<div class="linea"></div>
+					</div>
+
+<!-- ======== divorciado =========== --><div id="divorciado" style="display: none;">
+						<div action="index.php" method="post">
+							<label class="control-label " for="date">
+							Fecha de divorcio:
+							</label>
+							<input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text"/>
+							<br>
+							<label class="control-label " for="lugardematrimonio">
+							Lugar de divorcio (ciudad, provincia, país):
+							</label>
+							<input class="form-control" id="lugardematrimonio" name="lugardematrimonio" type="text"/>
+							<br>
+							<label class="control-label " for="adjuntar">
+							adjunta acta de divorcio:
+							</label>
+							<input type="file" name="adjunto" accept=".pdf,.jpg,.png" multiple /></p>
+						</div>
+						<br>
+						<div class="linea"></div>
+					</div>
+
+<!-- ============ viudo ============ --><div id="viudo" style="display: none;">
+						<div action="index.php" method="post">
+							<label class="control-label " for="date">
+							Fecha de fallecimiento del conyugue:
+							</label>
+							<input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text"/>
+							<br>
+							<label class="control-label " for="lugardematrimonio">
+							Lugar de fallecimiento del conyugue (ciudad, provincia, país):
+							</label>
+							<input class="form-control" id="lugardematrimonio" name="lugardematrimonio" type="text"/>
+							<br>
+							<label class="control-label " for="adjuntar">
+							adjunta acta de defunsión
+							</label>
+							<input type="file" name="adjunto" accept=".pdf,.jpg,.png" multiple /></p>
+						</div>
+						<br>
+						<div class="linea"></div>
+					</div>
+					</div>
+
+					<div class="form-group ">
+						<label class="control-label " for="select">
+							Descendencia italiana de:
+						</label>
+						<select class="select form-control" id="select" name="select" onChange="ver(this.value);">
+							<option value="padre">
+							madre/padre
+							</option>
+							<option value="abuelo">
+							abuela/o
+							</option>
+							<option value="bisabuelo">
+							bisabuela/o
+							</option>
+							<option value="tatarabuelo">
+							tatarabuela/o
+							</option>
+							<option value="trastatarabuelo">
+							trastatarabuela/o
+							</option>
+							<option value="pentabuelo">
+							pentabuela/o
+							</option>
+						</select>
+					</div>
+					<div class="linea"></div>
+
+<!-- ========= Datos padres ======== --><div id="padre" style="display: none;">
+						<div action="index.php" method="post">
+							<div class="form-group ">
+								<label class="control-label " for="name">
+									<p class="fw-lighter">A continuación completa el formulario los datos de tu padreo o madre, siempre teniendo en cuenta la linea de descendencia.</p>
+								</label>
+							</div>
+							<div class="form-group ">
+								<label class="control-label " for="name">
+								Nombre completo:
+								</label>
+								<input class="form-control" id="name" name="name" type="text"/>
+							</div>
+							<div class="form-group ">
+								<label class="control-label " for="date">
+								Fecha de nacimiento:
+								</label>
+								<input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text"/>
+							</div>
+							<div class="form-group ">
+								<label class="control-label " for="select">
+									Estado Civil:
+								</label>
+								<select class="select form-control" id="select" name="select" onChange="mostrar2(this.value);">
+									<option value="sol2">
+									Soltera/o
+									</option>
+									<option value="con2">
+									Concubinato
+									</option>
+									<option value="cas2">
+									Casada/o
+									</option>
+									<option value="div2">
+									Divorciada/o
+									</option>
+									<option value="viu2">
+									Viuda/o
+									</option>
+								</select>
+							</div>
+
+<!-- =================== soltero =================== --><div id="sol2" style="display: none;"></div>
+<!-- ================= concubinato ================= --><div id="con2" style="display: none;"></div>
+
+<!-- =================== casado ==================== --><div id="cas2" style="display: none;">
+								<div action="index.php" method="post">
+									<label class="control-label " for="date">
+									Fecha de matrimonio:
+									</label>
+									<input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text"/>
+									<br>
+									<label class="control-label " for="lugardematrimonio">
+									Lugar de matrimonio (ciudad, provincia, país):
+									</label>
+									<input class="form-control" id="lugardematrimonio" name="lugardematrimonio" type="text"/>
+									<br>
+									<label class="control-label " for="adjuntar">
+									adjunta acta de matrimonio:
+									</label>
+									<input type="file" name="adjunto" accept=".pdf,.jpg,.png" multiple /></p>
+								</div>
+								<br>
+								<div class="linea"></div>
+							</div>
+
+<!-- ================ divorciado =================== --><div id="div2" style="display: none;">
+								<div action="index.php" method="post">
+									<label class="control-label " for="date">
+									Fecha de divorcio:
+									</label>
+									<input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text"/>
+									<br>
+									<label class="control-label " for="lugardematrimonio">
+									Lugar de divorcio (ciudad, provincia, país):
+									</label>
+									<input class="form-control" id="lugardematrimonio" name="lugardematrimonio" type="text"/>
+									<br>
+									<label class="control-label " for="adjuntar">
+									adjunta acta de divorcio:
+									</label>
+									<input type="file" name="adjunto" accept=".pdf,.jpg,.png" multiple /></p>
+								</div>
+								<br>
+								<div class="linea"></div>
+							</div>
+
+<!-- ==================== viudo ==================== --><div id="viu2" style="display: none;">
+								<div action="index.php" method="post">
+									Fecha de fallecimiento del conyugue:
+									</label>
+									<input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text"/>
+									<br>
+									<label class="control-label " for="lugardematrimonio">
+									Lugar de fallecimiento del conyugue (ciudad, provincia, país):
+									</label>
+									<input class="form-control" id="lugardematrimonio" name="lugardematrimonio" type="text"/>
+									<br>
+									<label class="control-label " for="adjuntar">
+									adjunta acta de defunsión
+									</label>
+									<input type="file" name="adjunto" accept=".pdf,.jpg,.png" multiple /></p>
+								</div>
+								<br>
+								<div class="linea"></div>
+							</div>
+						</div>
+					</div>
+
+<!-- ========= abuelos ======== --><div id="abuelo" style="display: none;">
+						<div action="index.php" method="post">
+							<div class="form-group ">
+								<label class="control-label " for="name">
+									<p class="fw-lighter">A continuación completa el formulario los datos de tu abuela o abuelo, siempre teniendo en cuenta la linea de descendencia.</p>
+								</label>
+							</div>
+							<div class="form-group ">
+								<label class="control-label " for="name">
+								Nombre completo:
+								</label>
+								<input class="form-control" id="name" name="name" type="text"/>
+							</div>
+							<div class="form-group ">
+								<label class="control-label " for="date">
+								Fecha de nacimiento:
+								</label>
+								<input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text"/>
+							</div>
+							<div class="form-group ">
+								<label class="control-label " for="select">
+									Estado Civil:
+								</label>
+								<select class="select form-control" id="select" name="select" onChange="mostrar3(this.value);">
+									<option value="sol3">
+									Soltera/o
+									</option>
+									<option value="con3">
+									Concubinato
+									</option>
+									<option value="cas3">
+									Casada/o
+									</option>
+									<option value="div3">
+									Divorciada/o
+									</option>
+									<option value="viu3">
+									Viuda/o
+									</option>
+								</select>
+							</div>
+
+<!-- =================== soltero =================== --><div id="sol3" style="display: none;"></div>
+<!-- ================= concubinato ================= --><div id="con3" style="display: none;"></div>
+
+<!-- =================== casado ==================== --><div id="cas3" style="display: none;">
+								<div action="index.php" method="post">
+									<label class="control-label " for="date">
+									Fecha de matrimonio:
+									</label>
+									<input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text"/>
+									<br>
+									<label class="control-label " for="lugardematrimonio">
+									Lugar de matrimonio (ciudad, provincia, país):
+									</label>
+									<input class="form-control" id="lugardematrimonio" name="lugardematrimonio" type="text"/>
+									<br>
+									<label class="control-label " for="adjuntar">
+									adjunta acta de matrimonio:
+									</label>
+									<input type="file" name="adjunto" accept=".pdf,.jpg,.png" multiple /></p>
+								</div>
+								<br>
+								<div class="linea"></div>
+							</div>
+
+<!-- ================ divorciado =================== --><div id="div3" style="display: none;">
+								<div action="index.php" method="post">
+									<label class="control-label " for="date">
+									Fecha de divorcio:
+									</label>
+									<input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text"/>
+									<br>
+									<label class="control-label " for="lugardematrimonio">
+									Lugar de divorcio (ciudad, provincia, país):
+									</label>
+									<input class="form-control" id="lugardematrimonio" name="lugardematrimonio" type="text"/>
+									<br>
+									<label class="control-label " for="adjuntar">
+									adjunta acta de divorcio:
+									</label>
+									<input type="file" name="adjunto" accept=".pdf,.jpg,.png" multiple /></p>
+								</div>
+								<br>
+								<div class="linea"></div>
+							</div>
+
+<!-- ==================== viudo ==================== --><div id="viu3" style="display: none;">
+								<div action="index.php" method="post">
+									Fecha de fallecimiento del conyugue:
+									</label>
+									<input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text"/>
+									<br>
+									<label class="control-label " for="lugardematrimonio">
+									Lugar de fallecimiento del conyugue (ciudad, provincia, país):
+									</label>
+									<input class="form-control" id="lugardematrimonio" name="lugardematrimonio" type="text"/>
+									<br>
+									<label class="control-label " for="adjuntar">
+									adjunta acta de defunsión
+									</label>
+									<input type="file" name="adjunto" accept=".pdf,.jpg,.png" multiple /></p>
+								</div>
+								<br>
+								<div class="linea"></div>
+							</div>
+						</div>
+					</div>
+
+<!-- ========= Datos bisabuelos ======== --><div id="bisabuelo" style="display: none;">
+						<div action="index.php" method="post">
+							<div class="form-group ">
+								<label class="control-label " for="name">
+									<p class="fw-lighter">A continuación completa el formulario los datos de tu bisabuela o bisabuelo, siempre teniendo en cuenta la linea de descendencia.</p>
+								</label>
+							</div>
+							<div class="form-group ">
+								<label class="control-label " for="name">
+								Nombre completo:
+								</label>
+								<input class="form-control" id="name" name="name" type="text"/>
+							</div>
+							<div class="form-group ">
+								<label class="control-label " for="date">
+								Fecha de nacimiento:
+								</label>
+								<input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text"/>
+							</div>
+							<div class="form-group ">
+								<label class="control-label " for="select">
+									Estado Civil:
+								</label>
+								<select class="select form-control" id="select" name="select" onChange="mostrar4(this.value);">
+									<option value="sol4">
+									Soltera/o
+									</option>
+									<option value="con4">
+									Concubinato
+									</option>
+									<option value="cas4">
+									Casada/o
+									</option>
+									<option value="div4">
+									Divorciada/o
+									</option>
+									<option value="viu4">
+									Viuda/o
+									</option>
+								</select>
+							</div>
+
+<!-- =================== soltero =================== --><div id="sol4" style="display: none;"></div>
+<!-- ================= concubinato ================= --><div id="con4" style="display: none;"></div>
+
+<!-- =================== casado ==================== --><div id="cas4" style="display: none;">
+								<div action="index.php" method="post">
+									<label class="control-label " for="date">
+									Fecha de matrimonio:
+									</label>
+									<input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text"/>
+									<br>
+									<label class="control-label " for="lugardematrimonio">
+									Lugar de matrimonio (ciudad, provincia, país):
+									</label>
+									<input class="form-control" id="lugardematrimonio" name="lugardematrimonio" type="text"/>
+									<br>
+									<label class="control-label " for="adjuntar">
+									adjunta acta de matrimonio:
+									</label>
+									<input type="file" name="adjunto" accept=".pdf,.jpg,.png" multiple /></p>
+								</div>
+								<br>
+								<div class="linea"></div>
+							</div>
+
+<!-- ================ divorciado =================== --><div id="div4" style="display: none;">
+								<div action="index.php" method="post">
+									<label class="control-label " for="date">
+									Fecha de divorcio:
+									</label>
+									<input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text"/>
+									<br>
+									<label class="control-label " for="lugardematrimonio">
+									Lugar de divorcio (ciudad, provincia, país):
+									</label>
+									<input class="form-control" id="lugardematrimonio" name="lugardematrimonio" type="text"/>
+									<br>
+									<label class="control-label " for="adjuntar">
+									adjunta acta de divorcio:
+									</label>
+									<input type="file" name="adjunto" accept=".pdf,.jpg,.png" multiple /></p>
+								</div>
+								<br>
+								<div class="linea"></div>
+							</div>
+
+<!-- ==================== viudo ==================== --><div id="viu4" style="display: none;">
+								<div action="index.php" method="post">
+									Fecha de fallecimiento del conyugue:
+									</label>
+									<input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text"/>
+									<br>
+									<label class="control-label " for="lugardematrimonio">
+									Lugar de fallecimiento del conyugue (ciudad, provincia, país):
+									</label>
+									<input class="form-control" id="lugardematrimonio" name="lugardematrimonio" type="text"/>
+									<br>
+									<label class="control-label " for="adjuntar">
+									adjunta acta de defunsión
+									</label>
+									<input type="file" name="adjunto" accept=".pdf,.jpg,.png" multiple /></p>
+								</div>
+								<br>
+								<div class="linea"></div>
+							</div>
+						</div>
+					</div>
+
+<!-- ========= Datos tatarabuelo ======== --><div id="tatarabuelo" style="display: none;">
+						<div action="index.php" method="post">
+							<div class="form-group ">
+								<label class="control-label " for="name">
+									<p class="fw-lighter">A continuación completa el formulario los datos de tu tatarabuela o tatarabuelo, siempre teniendo en cuenta la linea de descendencia.</p>
+								</label>
+							</div>
+							<div class="form-group ">
+								<label class="control-label " for="name">
+								Nombre completo:
+								</label>
+								<input class="form-control" id="name" name="name" type="text"/>
+							</div>
+							<div class="form-group ">
+								<label class="control-label " for="date">
+								Fecha de nacimiento:
+								</label>
+								<input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text"/>
+							</div>
+							<div class="form-group ">
+								<label class="control-label " for="select">
+									Estado Civil:
+								</label>
+								<select class="select form-control" id="select" name="select" onChange="mostrar5(this.value);">
+									<option value="sol5">
+									Soltera/o
+									</option>
+									<option value="con5">
+									Concubinato
+									</option>
+									<option value="cas5">
+									Casada/o
+									</option>
+									<option value="div5">
+									Divorciada/o
+									</option>
+									<option value="viu5">
+									Viuda/o
+									</option>
+								</select>
+							</div>
+
+<!-- =================== soltero =================== --><div id="sol5" style="display: none;"></div>
+<!-- ================= concubinato ================= --><div id="con5" style="display: none;"></div>
+
+<!-- =================== casado ==================== --><div id="cas5" style="display: none;">
+								<div action="index.php" method="post">
+									<label class="control-label " for="date">
+									Fecha de matrimonio:
+									</label>
+									<input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text"/>
+									<br>
+									<label class="control-label " for="lugardematrimonio">
+									Lugar de matrimonio (ciudad, provincia, país):
+									</label>
+									<input class="form-control" id="lugardematrimonio" name="lugardematrimonio" type="text"/>
+									<br>
+									<label class="control-label " for="adjuntar">
+									adjunta acta de matrimonio:
+									</label>
+									<input type="file" name="adjunto" accept=".pdf,.jpg,.png" multiple /></p>
+								</div>
+								<br>
+								<div class="linea"></div>
+							</div>
+
+<!-- ================ divorciado =================== --><div id="div5" style="display: none;">
+								<div action="index.php" method="post">
+									<label class="control-label " for="date">
+									Fecha de divorcio:
+									</label>
+									<input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text"/>
+									<br>
+									<label class="control-label " for="lugardematrimonio">
+									Lugar de divorcio (ciudad, provincia, país):
+									</label>
+									<input class="form-control" id="lugardematrimonio" name="lugardematrimonio" type="text"/>
+									<br>
+									<label class="control-label " for="adjuntar">
+									adjunta acta de divorcio:
+									</label>
+									<input type="file" name="adjunto" accept=".pdf,.jpg,.png" multiple /></p>
+								</div>
+								<br>
+								<div class="linea"></div>
+							</div>
+
+<!-- ==================== viudo ==================== --><div id="viu5" style="display: none;">
+								<div action="index.php" method="post">
+									Fecha de fallecimiento del conyugue:
+									</label>
+									<input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text"/>
+									<br>
+									<label class="control-label " for="lugardematrimonio">
+									Lugar de fallecimiento del conyugue (ciudad, provincia, país):
+									</label>
+									<input class="form-control" id="lugardematrimonio" name="lugardematrimonio" type="text"/>
+									<br>
+									<label class="control-label " for="adjuntar">
+									adjunta acta de defunsión
+									</label>
+									<input type="file" name="adjunto" accept=".pdf,.jpg,.png" multiple /></p>
+								</div>
+								<br>
+								<div class="linea"></div>
+							</div>
+						</div>
+					</div>
+
+<!-- ========= Datos trastatarabuelos ======== --><div id="trastatarabuelo" style="display: none;">
+						<div action="index.php" method="post">
+							<div class="form-group ">
+								<label class="control-label " for="name">
+									<p class="fw-lighter">A continuación completa el formulario los datos de tu trastatarabuela o trastatarabuelo, siempre teniendo en cuenta la linea de descendencia.</p>
+								</label>
+							</div>
+							<div class="form-group ">
+								<label class="control-label " for="name">
+								Nombre completo:
+								</label>
+								<input class="form-control" id="name" name="name" type="text"/>
+							</div>
+							<div class="form-group ">
+								<label class="control-label " for="date">
+								Fecha de nacimiento:
+								</label>
+								<input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text"/>
+							</div>
+							<div class="form-group ">
+								<label class="control-label " for="select">
+									Estado Civil:
+								</label>
+								<select class="select form-control" id="select" name="select" onChange="mostrar6(this.value);">
+									<option value="sol6">
+									Soltera/o
+									</option>
+									<option value="con6">
+									Concubinato
+									</option>
+									<option value="cas6">
+									Casada/o
+									</option>
+									<option value="div6">
+									Divorciada/o
+									</option>
+									<option value="viu6">
+									Viuda/o
+									</option>
+								</select>
+							</div>
+
+<!-- =================== soltero =================== --><div id="sol6" style="display: none;"></div>
+<!-- ================= concubinato ================= --><div id="con6" style="display: none;"></div>
+
+<!-- =================== casado ==================== --><div id="cas6" style="display: none;">
+								<div action="index.php" method="post">
+									<label class="control-label " for="date">
+									Fecha de matrimonio:
+									</label>
+									<input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text"/>
+									<br>
+									<label class="control-label " for="lugardematrimonio">
+									Lugar de matrimonio (ciudad, provincia, país):
+									</label>
+									<input class="form-control" id="lugardematrimonio" name="lugardematrimonio" type="text"/>
+									<br>
+									<label class="control-label " for="adjuntar">
+									adjunta acta de matrimonio:
+									</label>
+									<input type="file" name="adjunto" accept=".pdf,.jpg,.png" multiple /></p>
+								</div>
+								<br>
+								<div class="linea"></div>
+							</div>
+
+<!-- ================ divorciado =================== --><div id="div6" style="display: none;">
+								<div action="index.php" method="post">
+									<label class="control-label " for="date">
+									Fecha de divorcio:
+									</label>
+									<input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text"/>
+									<br>
+									<label class="control-label " for="lugardematrimonio">
+									Lugar de divorcio (ciudad, provincia, país):
+									</label>
+									<input class="form-control" id="lugardematrimonio" name="lugardematrimonio" type="text"/>
+									<br>
+									<label class="control-label " for="adjuntar">
+									adjunta acta de divorcio:
+									</label>
+									<input type="file" name="adjunto" accept=".pdf,.jpg,.png" multiple /></p>
+								</div>
+								<br>
+								<div class="linea"></div>
+							</div>
+
+<!-- ==================== viudo ==================== --><div id="viu6" style="display: none;">
+								<div action="index.php" method="post">
+									Fecha de fallecimiento del conyugue:
+									</label>
+									<input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text"/>
+									<br>
+									<label class="control-label " for="lugardematrimonio">
+									Lugar de fallecimiento del conyugue (ciudad, provincia, país):
+									</label>
+									<input class="form-control" id="lugardematrimonio" name="lugardematrimonio" type="text"/>
+									<br>
+									<label class="control-label " for="adjuntar">
+									adjunta acta de defunsión
+									</label>
+									<input type="file" name="adjunto" accept=".pdf,.jpg,.png" multiple /></p>
+								</div>
+								<br>
+								<div class="linea"></div>
+							</div>
+						</div>
+					</div>
+
+<!-- ========= Datos pentabuelos =========== --><div id="pentabuelo" style="display: none;">
+						<div action="index.php" method="post">
+							<div class="form-group ">
+								<label class="control-label " for="name">
+									<p class="fw-lighter">A continuación completa el formulario los datos de tu pentabuelo o pentabuela, siempre teniendo en cuenta la linea de descendencia.</p>
+								</label>
+							</div>
+							<div class="form-group ">
+								<label class="control-label " for="name">
+								Nombre completo:
+								</label>
+								<input class="form-control" id="name" name="name" type="text"/>
+							</div>
+							<div class="form-group ">
+								<label class="control-label " for="date">
+								Fecha de nacimiento:
+								</label>
+								<input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text"/>
+							</div>
+							<div class="form-group ">
+								<label class="control-label " for="select">
+									Estado Civil:
+								</label>
+								<select class="select form-control" id="select" name="select" onChange="mostrar7(this.value);">
+									<option value="sol7">
+									Soltera/o
+									</option>
+									<option value="con7">
+									Concubinato
+									</option>
+									<option value="cas7">
+									Casada/o
+									</option>
+									<option value="div7">
+									Divorciada/o
+									</option>
+									<option value="viu7">
+									Viuda/o
+									</option>
+								</select>
+							</div>
+
+<!-- =================== soltero =================== --><div id="sol7" style="display: none;"></div>
+<!-- ================= concubinato ================= --><div id="con7" style="display: none;"></div>
+
+<!-- =================== casado ==================== --><div id="cas7" style="display: none;">
+								<div action="index.php" method="post">
+									<label class="control-label " for="date">
+									Fecha de matrimonio:
+									</label>
+									<input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text"/>
+									<br>
+									<label class="control-label " for="lugardematrimonio">
+									Lugar de matrimonio (ciudad, provincia, país):
+									</label>
+									<input class="form-control" id="lugardematrimonio" name="lugardematrimonio" type="text"/>
+									<br>
+									<label class="control-label " for="adjuntar">
+									adjunta acta de matrimonio:
+									</label>
+									<input type="file" name="adjunto" accept=".pdf,.jpg,.png" multiple /></p>
+								</div>
+								<br>
+								<div class="linea"></div>
+							</div>
+
+<!-- ================ divorciado =================== --><div id="div7" style="display: none;">
+								<div action="index.php" method="post">
+									<label class="control-label " for="date">
+									Fecha de divorcio:
+									</label>
+									<input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text"/>
+									<br>
+									<label class="control-label " for="lugardematrimonio">
+									Lugar de divorcio (ciudad, provincia, país):
+									</label>
+									<input class="form-control" id="lugardematrimonio" name="lugardematrimonio" type="text"/>
+									<br>
+									<label class="control-label " for="adjuntar">
+									adjunta acta de divorcio:
+									</label>
+									<input type="file" name="adjunto" accept=".pdf,.jpg,.png" multiple /></p>
+								</div>
+								<br>
+								<div class="linea"></div>
+							</div>
+
+<!-- ==================== viudo ==================== --><div id="viu7" style="display: none;">
+								<div action="index.php" method="post">
+									Fecha de fallecimiento del conyugue:
+									</label>
+									<input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text"/>
+									<br>
+									<label class="control-label " for="lugardematrimonio">
+									Lugar de fallecimiento del conyugue (ciudad, provincia, país):
+									</label>
+									<input class="form-control" id="lugardematrimonio" name="lugardematrimonio" type="text"/>
+									<br>
+									<label class="control-label " for="adjuntar">
+									adjunta acta de defunsión
+									</label>
+									<input type="file" name="adjunto" accept=".pdf,.jpg,.png" multiple /></p>
+								</div>
+								<br>
+								<div class="linea"></div>
+							</div>
+						</div>
+					</div>
+
+<!-- == Acta de no naturalización == --><div class="form-group ">
+						<label class="control-label " for="adjuntar">
+						adjunta acta de No naturalización:
+						</label>
+						<input type="file" name="adjunto" accept=".pdf,.jpg,.png" multiple /></p>
+					</div>
+					<div class="linea"></div>
+
+<!-- ===== Protección de datos ===== --><div class="form-group ">
+						<label class="control-label ">
+						Protección y tratamiento de datos
+						</label>
+						<div class=" ">
+							<div class="checkbox">
+								<label class="checkbox">
+									<input name="checkbox" type="checkbox" value="First Choice"/>
+									Acepto <a href="#">Políticas de privacidad</a>
+								</label>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+					<div>
+					<button class="btn btn-primary " name="submit" type="submit">
+						Enviar
+					</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+© 2021 Fabiana Cardozo  | inicio | contacto
+
+<!-- jQuery -->
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<!-- Datepickert -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+
+<script src="./code.js"></script>
+</body>
+</html>
+
